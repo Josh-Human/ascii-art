@@ -5,13 +5,18 @@ from PIL import Image
 MAX_BRIGHTNESS = 255
 CHARACTERS = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
 
+parser = argparse.ArgumentParser(description='Print an ascii art version of an image in the console.')
+parser.add_argument('path', metavar='p', type=str, nargs='?',
+                    help='path of image to transform')
 
-def main():
-    img = Image.open("./ascii-pineapple.jpg")
+def main(img_path):
+    img = Image.open(img_path)
 
     print("Succesfully loaded image!")
+    
     resalce_factor = 0.25
     img.resize((round(img.width * resalce_factor), round(img.height * resalce_factor)))
+
     print("Image size: {} x {}".format(img.width, img.height))
 
     pixel_matrix = construct_empty_matrix(img.height, img.width)
@@ -46,4 +51,5 @@ def calculate_brightness(pixel, algo=None):
         return round((pixel[0] + pixel[1] + pixel[2]) / 3)
 
 if __name__ == "__main__":
-    main()
+    args = parser.parse_args()
+    main(args.path)
