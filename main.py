@@ -12,6 +12,12 @@ parser.add_argument('--brightness_algorithm', metavar="--b",type=str, required=F
                     default='average',
                     help='algorithm to calculate pixel brightness')
 
+class Pixel:
+    def __init__(self, rgb_values=(0,0,0)):
+        self.R = rgb_values[0]
+        self.G = rgb_values[1]
+        self.B = rgb_values[2]
+
 def main(img_path, brightness_algorithm):
     img = Image.open(img_path)
 
@@ -28,7 +34,7 @@ def main(img_path, brightness_algorithm):
 
     for y in range(img.height):
         for x in range(img.width):
-            pixel_matrix[x][y] = img.getpixel((x, y))
+            pixel_matrix[x][y] = Pixel(img.getpixel((x, y)))
 
             pixel = pixel_matrix[x][y]
 
@@ -47,11 +53,14 @@ def convert_brightness_to_charcter(brightness):
 
 def calculate_brightness(pixel, algo=None):
     if algo == "min_max":
-        return round((max(pixel[0], pixel[1], pixel[2]) + min(pixel[0], pixel[1] , pixel[2])) / 2)
+        return round((max(pixel.R, pixel.G, pixel.B) + min(pixel.R, pixel.G , pixel.B)) / 2)
     elif algo == "luminosity":
-        return round(0.21 * pixel[0] + 0.72 * pixel[1] + 0.07 * pixel[2])
+        return round(0.21 * pixel.R + 0.72 * pixel.G + 0.07 * pixel.B)
     else:
-        return round((pixel[0] + pixel[1] + pixel[2]) / 3)
+        return round((pixel.R + pixel.G + pixel.B) / 3)
+
+
+
 
 if __name__ == "__main__":
     args = parser.parse_args()
